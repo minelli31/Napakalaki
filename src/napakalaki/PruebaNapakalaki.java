@@ -357,17 +357,17 @@ public class PruebaNapakalaki {
         m = new Monster(nameMonster, 21, b, p);
         monstruos.add(m);
 
-        /*
-         *  printMonsters(monstruos);
-         * monstersResult = biggerThen(monstruos, 20);
-         * printMonsters(monstersResult);
-         * System.out.println("########################################################################");
-         * monstersResult = lossLevels(monstruos);
-         * printMonsters(monstersResult);
-         * System.out.println("########################################################################");
-         * monstersResult = greedLevels(monstruos, 1);
-         * printMonsters(monstersResult);
-         */
+        
+        printMonsters(monstruos);
+        monstersResult = biggerThen(monstruos, 20);
+        printMonsters(monstersResult);
+        System.out.println("########################################################################");
+        monstersResult = lossLevels(monstruos);
+        printMonsters(monstersResult);
+        System.out.println("########################################################################");
+        monstersResult = greedLevels(monstruos, 1);
+        printMonsters(monstersResult);
+        
 
         /*
          * System.out.println("###################################  ARMOR  #####################################");
