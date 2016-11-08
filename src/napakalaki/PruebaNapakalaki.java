@@ -112,32 +112,13 @@ public class PruebaNapakalaki {
 
             if (((listSpecificHidden != null) || (listSpecificVisible != null))
                     && (monstruos.get(i).getBadnHiddenTreasures() == 0)
-                    && (listSpecificVisible != null)
                     && (monstruos.get(i).getBadnVisibleTreasures() == 0)
                     &&!monstruos.get(i).getDeath()) {
                 tamTreasureVisible = listSpecificVisible.size();
                 tamTreasureHidden  = listSpecificHidden.size();
                 beVisible          = beHidden = false;
 
-                for (int j = 0; j < tamTreasureVisible; j++) {
-                    if ((listSpecificVisible.get(j) == treasure)) {
-                        System.out.println(monstruos.get(i).getName());
-                        System.out.println(monstruos.get(i).getBadText());
-                        System.out.println("Visibles => " + listSpecificVisible.get(j) + ".");
-                        beVisible = true;
-                    }
-                }
-
-                for (int k = 0; k < tamTreasureHidden; k++) {
-                    if ((listSpecificHidden.get(k) == treasure)) {
-                        System.out.println(monstruos.get(i).getName());
-                        System.out.println(monstruos.get(i).getBadText());
-                        System.out.println("Ocultos => " + listSpecificHidden.get(k) + ".");
-                        beHidden = true;
-                    }
-                }
-
-                if (beVisible || beHidden) {
+                if (listSpecificVisible.contains(treasure) || listSpecificHidden.contains(treasure)) {
                     monstersConsult.add(monstruos.get(i));
                 }
             }
@@ -356,8 +337,6 @@ public class PruebaNapakalaki {
                                          new ArrayList());
         m = new Monster(nameMonster, 21, b, p);
         monstruos.add(m);
-
-        
         printMonsters(monstruos);
         monstersResult = biggerThen(monstruos, 20);
         printMonsters(monstersResult);
@@ -367,23 +346,19 @@ public class PruebaNapakalaki {
         System.out.println("########################################################################");
         monstersResult = greedLevels(monstruos, 1);
         printMonsters(monstersResult);
-        
-
-        /*
-         * System.out.println("###################################  ARMOR  #####################################");
-         * lossSpecificTreasures(monstruos, TreasureKind.ARMOR);
-         * System.out.println("###################################  ONEHAND  ###################################");
-         * lossSpecificTreasures(monstruos, TreasureKind.ONEHAND);
-         * System.out.println("###################################  BOTHHAND  ##################################");
-         * lossSpecificTreasures(monstruos, TreasureKind.BOTHHAND);
-         * System.out.println("###################################  HELMET  ####################################");
-         * lossSpecificTreasures(monstruos, TreasureKind.HELMET);
-         * System.out.println("###################################  SHOE  ######################################");
-         * lossSpecificTreasures(monstruos, TreasureKind.SHOE);
-         * System.out.println("###################################  NECKLACE  ##################################");
-         * lossSpecificTreasures(monstruos, TreasureKind.NECKLACE);
-         */
-        monstersResult = lossSpecificTreasures(monstruos, TreasureKind.SHOE);
+        System.out.println("###################################  ARMOR  #####################################");
+        lossSpecificTreasures(monstruos, TreasureKind.ARMOR);
+        System.out.println("###################################  ONEHAND  ###################################");
+        lossSpecificTreasures(monstruos, TreasureKind.ONEHAND);
+        System.out.println("###################################  BOTHHAND  ##################################");
+        lossSpecificTreasures(monstruos, TreasureKind.BOTHHAND);
+        System.out.println("###################################  HELMET  ####################################");
+        lossSpecificTreasures(monstruos, TreasureKind.HELMET);
+        System.out.println("###################################  SHOE  ######################################");
+        lossSpecificTreasures(monstruos, TreasureKind.SHOE);
+        System.out.println("###################################  NECKLACE  ##################################");
+        lossSpecificTreasures(monstruos, TreasureKind.NECKLACE);
+        monstersResult = lossSpecificTreasures(monstruos, TreasureKind.ARMOR);
         printMonsters(monstersResult);
     }
 
@@ -412,6 +387,3 @@ public class PruebaNapakalaki {
         }
     }
 }
-
-
-//~ Formatted by Jindent --- http://www.jindent.com
