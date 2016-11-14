@@ -63,6 +63,10 @@ public class Monster {
         return this.combatLevel;
     }
 
+    public int getLevelsGained() {
+        return prize.getLevels();
+    }
+
     public String getName() {
         return this.name;
     }
@@ -78,7 +82,8 @@ public class Monster {
     public ArrayList<TreasureKind> getSpecificVisibleTreasures() {
         return this.badConsequence.getSpecificVisible();
     }
+
+    public int getTreasuresGained() {
+        return prize.getTreasures();
+    }
 }
-
-
-//~ Formatted by Jindent --- http://www.jindent.com

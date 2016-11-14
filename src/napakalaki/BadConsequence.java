@@ -90,6 +90,25 @@ public class BadConsequence {
         return string;
     }
 
+    public boolean getDeath() {
+        return this.death;
+    }
+
+    public boolean isEmpty() {
+        boolean isEmpty = false;
+
+        if ((this.levels == 0)
+                && (this.nVisibleTreasures == 0)
+                && (this.nHiddenTreasures == 0)
+                && this.specificHiddenTreasures.isEmpty()
+                && this.specificVisibleTreasures.isEmpty()
+                && (this.death == false)) {
+            isEmpty = true;
+        }
+
+        return isEmpty;
+    }
+
     public int getLevels() {
         return this.levels;
     }
@@ -113,10 +132,4 @@ public class BadConsequence {
     public String getText() {
         return this.text;
     }
-    public boolean getDeath(){
-        return this.death;
-    }
 }
-
-
-//~ Formatted by Jindent --- http://www.jindent.com
