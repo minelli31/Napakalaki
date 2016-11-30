@@ -48,9 +48,28 @@ public class Player {
         this.pendingBadConsequence = new BadConsequence("", 0, 0, 0);
     }
 
-    private void applyBadConsequence(Monster m) {}
+    private void applyBadConsequence(Monster m) {
+        BadConsequence badConsequence = m.getBadConsequence();
+        int            nLevels        = badConsequence.getLevels();
 
-    private void applyPrize(Monster m) {}
+        this.decrementLevels(nLevels);
+    }
+
+    private void applyPrize(Monster m) {
+        int nLevels = m.getLevelsGained();
+
+        this.incrementLevels(nLevels);
+
+        int nTreasures = m.getTreasuresGained();
+
+        if (nTreasures > 0) {
+            CardDealer dealer = CardDealer.getInstance();
+
+            // for (Treasure tr : this.hiddenTreasures) {
+            // this.hiddenTreasures.add(tr);
+            // }
+        }
+    }
 
     private void bringToLife() {
         this.dead = false;
@@ -61,7 +80,75 @@ public class Player {
     }
 
     private boolean canMakeTreasureVisible(Treasure t) {
-        return true;
+        boolean canI     = false;
+        int     ARMOR    = 0,
+                ONEHAND  = 0,
+                BOTHHAND = 0,
+                HELMET   = 0,
+                SHOE     = 0,
+                NECKLACE = 0;
+
+        for (Treasure tr : this.visibleTreasures) {
+            if (tr.getType() == TreasureKind.ARMOR) {
+                ARMOR++;
+            } else if (tr.getType() == TreasureKind.ONEHAND) {
+                ONEHAND++;
+            } else if (tr.getType() == TreasureKind.BOTHHAND) {
+                BOTHHAND++;
+            } else if (tr.getType() == TreasureKind.HELMET) {
+                HELMET++;
+            } else if (tr.getType() == TreasureKind.SHOE) {
+                SHOE++;
+            } else if (tr.getType() == TreasureKind.NECKLACE) {
+                NECKLACE++;
+            }
+        }
+
+        switch (t.getType()) {
+        case ARMOR :
+            if (ARMOR == 0) {
+                canI = true;
+            }
+
+            break;
+
+        case ONEHAND :
+            if ((ONEHAND < 2) && (BOTHHAND == 0)) {
+                canI = true;
+            }
+
+            break;
+
+        case BOTHHAND :
+            if ((BOTHHAND == 0) && (ONEHAND == 0)) {
+                canI = true;
+            }
+
+            break;
+
+        case HELMET :
+            if (HELMET == 0) {
+                canI = true;
+            }
+
+            break;
+
+        case SHOE :
+            if (SHOE == 0) {
+                canI = true;
+            }
+
+            break;
+
+        case NECKLACE :
+            if (NECKLACE == 0) {
+                canI = true;
+            }
+
+            break;
+        }
+
+        return canI;
     }
 
     public boolean canYouGiveMeATreasure() {
@@ -73,7 +160,33 @@ public class Player {
     }
 
     public CombatResult combat(Monster m) {
-        CombatResult comb = null;
+        CombatResult comb         = null;
+        int          myLevel      = this.getCombatLevel();
+        int          monsterLevel = m.getLevel();
+
+        if (!this.canISteal()) {
+            Dice dice   = Dice.getInstance();
+            int  number = dice.nextNumber();
+
+            if (number < 3) {
+                int enemyLevel = enemy.getCombatLevel();
+
+                monsterLevel += enemyLevel;
+            }
+        }
+
+        if (myLevel > monsterLevel) {
+            this.applyPrize(m);
+
+            if (this.level >= MAXLEVEL) {
+                comb = CombatResult.WINGAME;
+            } else {
+                comb = CombatResult.WIN;
+            }
+        } else {
+            this.applyBadConsequence(m);
+            comb = CombatResult.LOSE;
+        }
 
         return comb;
     }
@@ -90,6 +203,32 @@ public class Player {
         if (this.hiddenTreasures.isEmpty() && this.visibleTreasures.isEmpty()) {
             this.dead = true;
         }
+    }
+
+    public void discardHiddenTreasure(Treasure t) {
+        this.hiddenTreasures.remove(t);
+
+        if ((this.pendingBadConsequence != null) &&!this.pendingBadConsequence.isEmpty()) {
+            this.pendingBadConsequence.substractVisibleTreasure(t);
+        }
+
+        this.dieIfNoTreasures();
+    }
+
+    public void discardVisibleTreasure(Treasure t) {
+        this.visibleTreasures.remove(t);
+
+        if ((this.pendingBadConsequence != null) &&!this.pendingBadConsequence.isEmpty()) {
+            this.pendingBadConsequence.substractVisibleTreasure(t);
+        }
+
+        this.dieIfNoTreasures();
+    }
+
+    public Treasure giveMeATreasure() {
+        Random rand = new Random();
+
+        return this.hiddenTreasures.get(rand.nextInt(this.hiddenTreasures.size() + 1));
     }
 
     public void haveStolen() {
@@ -130,19 +269,64 @@ public class Player {
         }
     }
 
+    public void initTreasures() {
+        CardDealer dealer = CardDealer.getInstance();
+        Dice       dice   = Dice.getInstance();
+        Treasure   treasure;
+        int        number;
+
+        this.bringToLife();
+        treasure = dealer.nextTreasure();
+        this.hiddenTreasures.add(treasure);
+        number = dice.nextNumber();
+
+        if (number > 1) {
+            treasure = dealer.nextTreasure();
+            this.hiddenTreasures.add(treasure);
+        }
+
+        if (number == 6) {
+            treasure = dealer.nextTreasure();
+            this.hiddenTreasures.add(treasure);
+        }
+    }
+
+    public void makeTreasureVisible(Treasure t) {
+        boolean canI = false;
+
+        canI = this.canMakeTreasureVisible(t);
+
+        if (canI) {
+            this.visibleTreasures.add(t);
+            this.hiddenTreasures.remove(t);
+        }
+    }
+
+    public Treasure stealTreasure() {
+        Treasure treasure = null;
+
+        if (this.canISteal()) {}
+
+        return treasure;
+    }
+
+    public void substractHiddenTreasure(Treasure t) {}
+
+    public void substractVisibleTreasure(Treasure t) {}
+
     @Override
     public String toString() {
         return "Name: " + this.name + "\tLevel: " + this.level;
     }
 
     public boolean validState() {
-        boolean valid = false;
+        boolean stateOK = false;
 
         if (this.pendingBadConsequence.isEmpty() && (this.hiddenTreasures.size() <= 4)) {
-            valid = true;
+            stateOK = true;
         }
 
-        return valid;
+        return stateOK;
     }
 
     private int getCombatLevel() {

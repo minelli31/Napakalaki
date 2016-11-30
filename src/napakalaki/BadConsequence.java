@@ -17,13 +17,13 @@ public class BadConsequence {
     /**
      * Variables
      */
-    private final String                  text;
-    private final int                     levels;
-    private final int                     nVisibleTreasures;
-    private final int                     nHiddenTreasures;
-    private final boolean                 death;
-    private final ArrayList<TreasureKind> specificVisibleTreasures;
-    private final ArrayList<TreasureKind> specificHiddenTreasures;
+    private String                  text;
+    private int                     levels;
+    private int                     nVisibleTreasures;
+    private int                     nHiddenTreasures;
+    private boolean                 death;
+    private ArrayList<TreasureKind> specificVisibleTreasures;
+    private ArrayList<TreasureKind> specificHiddenTreasures;
 
     /**
      * Constructores
@@ -75,6 +75,28 @@ public class BadConsequence {
         this.death                    = false;
         this.specificHiddenTreasures  = new ArrayList<TreasureKind>();
         this.specificVisibleTreasures = new ArrayList<TreasureKind>();
+    }
+
+    public BadConsequence adjustToFitTreasureLists(ArrayList<Treasure> v, ArrayList<Treasure> h) {
+        BadConsequence b = new BadConsequence("",0,0,0);
+
+        return b;
+    }
+
+    public void substractHiddenTreasure(Treasure t) {
+        this.specificHiddenTreasures.remove(t.getType());
+
+        if (this.nHiddenTreasures != 0) {
+            this.nHiddenTreasures--;
+        }
+    }
+
+    public void substractVisibleTreasure(Treasure t) {
+        this.specificVisibleTreasures.remove(t.getType());
+
+        if (this.nVisibleTreasures != 0) {
+            this.nVisibleTreasures--;
+        }
     }
 
     @Override

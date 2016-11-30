@@ -49,58 +49,115 @@ public class Napakalaki {
     private ArrayList<Player> players;
     private CardDealer        dealer;
     private Monster           currentMonster;
+    private int               nextPlayerIndex;
 
-    private Napakalaki() {}
+    private Napakalaki() {
+        this.nextPlayerIndex = -1;
+    }
 
-    public static CombatResult developCombat() {
-        CombatResult comb = null;
+    public CombatResult developCombat() {
+        CombatResult comb = this.currentPlayer.combat(currentMonster);
+
+        this.dealer.giveMonsterBack(currentMonster);
 
         return comb;
     }
 
-    public static void discardHiddenTreasures(ArrayList<Treasure> treasure) {}
+    public void discardAllTreasures() {}
 
-    public static void discardVisibleTreasures(ArrayList<Treasure> treasure) {}
-
-    public static boolean endOfGamen(CombatResult result) {
-        return true;
+    public void discardHiddenTreasures(ArrayList<Treasure> treasure) {
+        for (Treasure tr : treasure) {
+            this.currentPlayer.discardHiddenTreasure(tr);
+            this.dealer.giveTreasureBack(tr);
+        }
     }
 
-    private void initGame(ArrayList<String> players) {}
+    public void discardVisibleTreasures(ArrayList<Treasure> treasure) {
+        for (Treasure tr : treasure) {
+            this.currentPlayer.discardVisibleTreasure(tr);
+            this.dealer.giveTreasureBack(tr);
+        }
+    }
 
-    private void initPlayers(ArrayList<String> names) {}
+    public static boolean endOfGame(CombatResult result) {
+        return (result == CombatResult.WINGAME);
+    }
 
-    public static void makeTreasuresVisible(ArrayList<Treasure> treasure) {}
+    public void initGame(ArrayList<String> players) {
+        this.initPlayers(players);
+        this.setEnemies();
+        dealer.initCards();
+        this.nextTurn();
+    }
+
+    private void initPlayers(ArrayList<String> names) {
+        this.players = new ArrayList<Player>();
+
+        for (String name : names) {
+            Player p = new Player(name);
+
+            this.players.add(p);
+        }
+    }
+
+    public void makeTreasuresVisible(ArrayList<Treasure> treasure) {
+        for (Treasure tr : treasure) {
+            this.currentPlayer.makeTreasureVisible(tr);
+        }
+    }
 
     private Player nextPlayer() {
-        Player next = null;
+        if (this.nextPlayerIndex == -1) {
+            Random rand = new Random();
 
-        this.currentPlayer = next;
+            this.nextPlayerIndex = rand.nextInt(this.players.size());
+        } else {
+            this.nextPlayerIndex = (this.nextPlayerIndex + 1) % this.players.size();
+        }
 
-        return this.currentPlayer;
+        return this.currentPlayer = this.players.get(this.nextPlayerIndex);
     }
 
-    public static boolean nextTurn() {
-        return true;
+    public boolean nextTurn() {
+        boolean stateOK = this.nextTurnAllowed();
+
+        if (stateOK) {
+            this.currentMonster = dealer.nextMonster();
+            this.currentPlayer  = this.nextPlayer();
+
+            if (this.currentPlayer.isDead()) {
+                this.currentPlayer.initTreasures();
+            }
+        }
+
+        return stateOK;
     }
 
     private boolean nextTurnAllowed() {
-        return true;
+        return (this.currentPlayer == null)
+               ? true
+               : this.currentPlayer.validState();
     }
 
-    public static Monster getCurrentMonster(ArrayList<String> names) {
-        Monster current = null;
-
-        return current;
+    public Monster getCurrentMonster() {
+        return this.currentMonster;
     }
 
-    public static Player getCurrentPLayer(ArrayList<String> names) {
-        Player current = null;
-
-        return current;
+    public Player getCurrentPlayer() {
+        return this.currentPlayer;
     }
 
-    private void setEnemies() {}
+    private void setEnemies() {
+        Player enemy;
+
+        do {
+            Random rand = new Random();
+
+            enemy = this.players.get(rand.nextInt(this.players.size() + 1));
+        } while (enemy == this.currentPlayer);
+
+        this.currentPlayer.setEnemy(enemy);
+    }
 
     public static Napakalaki getInstance() {
         return instance;
