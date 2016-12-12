@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  *
  * @author minelli
@@ -48,6 +50,7 @@ public class Player {
         this.pendingBadConsequence = new BadConsequence("", 0, 0, 0);
     }
 
+    /////////////////////////////////////////////////////////////////
     private void applyBadConsequence(Monster m) {
         BadConsequence badConsequence = m.getBadConsequence();
         int            nLevels        = badConsequence.getLevels();
@@ -65,9 +68,9 @@ public class Player {
         if (nTreasures > 0) {
             CardDealer dealer = CardDealer.getInstance();
 
-            // for (Treasure tr : this.hiddenTreasures) {
-            // this.hiddenTreasures.add(tr);
-            // }
+            for (int i = 0; i < nTreasures; i++) {
+                this.hiddenTreasures.add(dealer.nextTreasure());
+            }
         }
     }
 
@@ -205,6 +208,20 @@ public class Player {
         }
     }
 
+    public void discardAllTreasures() {
+        ArrayList<Treasure> visible = new ArrayList(this.visibleTreasures);
+
+        for (Treasure t : visible) {
+            this.discardVisibleTreasure(t);
+        }
+
+        ArrayList<Treasure> hidden = new ArrayList(this.hiddenTreasures);
+
+        for (Treasure t : hidden) {
+            this.discardHiddenTreasure(t);
+        }
+    }
+
     public void discardHiddenTreasure(Treasure t) {
         this.hiddenTreasures.remove(t);
 
@@ -271,23 +288,45 @@ public class Player {
 
     public void initTreasures() {
         CardDealer dealer = CardDealer.getInstance();
-        Dice       dice   = Dice.getInstance();
         Treasure   treasure;
-        int        number;
+        Dice       dice = Dice.getInstance();
 
         this.bringToLife();
         treasure = dealer.nextTreasure();
         this.hiddenTreasures.add(treasure);
-        number = dice.nextNumber();
 
-        if (number > 1) {
+        int number = dice.nextNumber();
+
+        switch (number) {
+        case 1 :
             treasure = dealer.nextTreasure();
             this.hiddenTreasures.add(treasure);
+
+            break;
+
+        case 6 : {
+            int i = 0;
+
+            while (i < 3) {
+                treasure = dealer.nextTreasure();
+                this.hiddenTreasures.add(treasure);
+                i++;
+            }
+
+            break;
         }
 
-        if (number == 6) {
-            treasure = dealer.nextTreasure();
-            this.hiddenTreasures.add(treasure);
+        default : {
+            int i = 0;
+
+            while (i < 2) {
+                treasure = dealer.nextTreasure();
+                this.hiddenTreasures.add(treasure);
+                i++;
+            }
+
+            break;
+        }
         }
     }
 
@@ -302,17 +341,20 @@ public class Player {
         }
     }
 
+    /////////////////////////////////////////////////
     public Treasure stealTreasure() {
         Treasure treasure = null;
 
-        if (this.canISteal()) {}
+        if (this.canISteal()) {
+            if (this.canYouGiveMeATreasure()) {
+                treasure = enemy.giveMeATreasure();
+                this.hiddenTreasures.add(treasure);
+                this.haveStolen();
+            }
+        }
 
         return treasure;
     }
-
-    public void substractHiddenTreasure(Treasure t) {}
-
-    public void substractVisibleTreasure(Treasure t) {}
 
     @Override
     public String toString() {

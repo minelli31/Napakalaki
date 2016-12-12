@@ -15,10 +15,11 @@ import javax.swing.Timer;
  * @author minelli
  */
 public class Dice {
-    private static Dice instance  = null;
-    private Random      generator = new Random();
-    private Timer       timerDice;
-    private int         value;
+    private static final Dice instance = new Dice();
+    private static int        number;
+    private Random            generator = new Random();
+    private Timer             timerDice;
+    private int               value;
 
     private Dice() {}
 

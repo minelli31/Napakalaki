@@ -78,7 +78,46 @@ public class BadConsequence {
     }
 
     public BadConsequence adjustToFitTreasureLists(ArrayList<Treasure> v, ArrayList<Treasure> h) {
-        BadConsequence b = new BadConsequence("",0,0,0);
+        BadConsequence b;
+
+        if ((this.nVisibleTreasures != 0) || (this.nHiddenTreasures != 0)) {
+            int nV = 0,
+                nH = 0;
+
+            if (this.nVisibleTreasures >= v.size()) {
+                nV = v.size();
+            } else {
+                nV = this.nVisibleTreasures;
+            }
+
+            if (this.nHiddenTreasures >= h.size()) {
+                nH = h.size();
+            } else {
+                nH = this.nHiddenTreasures;
+            }
+
+            b = new BadConsequence(this.text, this.levels, nV, nH);
+        } else {
+            ArrayList<TreasureKind> sV = new ArrayList<TreasureKind>();
+            ArrayList<TreasureKind> sH = new ArrayList<TreasureKind>();
+
+            for (Treasure tv : v) {
+                sV.add(tv.getType());
+            }
+
+            ArrayList<TreasureKind> intersectionV = new ArrayList(v);
+
+            intersectionV.retainAll(intersectionV);
+
+            for (Treasure th : h) {
+                sH.add(th.getType());
+            }
+
+            ArrayList<TreasureKind> intersectionH = new ArrayList(h);
+
+            intersectionH.retainAll(intersectionV);
+            b = new BadConsequence(this.text, this.levels, intersectionV, intersectionH);
+        }
 
         return b;
     }

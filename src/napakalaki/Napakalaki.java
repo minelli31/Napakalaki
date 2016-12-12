@@ -43,16 +43,17 @@ public class Napakalaki {
 
     // Variables privadas
     private static final Napakalaki instance = new Napakalaki();
-
+    private CardDealer              dealer   = CardDealer.getInstance();
+    private Dice dice;
     // Atributos de referencia
     private Player            currentPlayer;
     private ArrayList<Player> players;
-    private CardDealer        dealer;
     private Monster           currentMonster;
     private int               nextPlayerIndex;
 
     private Napakalaki() {
         this.nextPlayerIndex = -1;
+        dice   = Dice.getInstance();
     }
 
     public CombatResult developCombat() {
@@ -150,13 +151,15 @@ public class Napakalaki {
     private void setEnemies() {
         Player enemy;
 
-        do {
-            Random rand = new Random();
+        for (Player p : this.players) {
+            do {
+                Random rand = new Random();
 
-            enemy = this.players.get(rand.nextInt(this.players.size() + 1));
-        } while (enemy == this.currentPlayer);
+                enemy = this.players.get(rand.nextInt(this.players.size()));
+            } while (enemy == p);
 
-        this.currentPlayer.setEnemy(enemy);
+            p.setEnemy(enemy);
+        }
     }
 
     public static Napakalaki getInstance() {

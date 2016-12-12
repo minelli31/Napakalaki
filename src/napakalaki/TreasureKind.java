@@ -12,3 +12,5 @@ package napakalaki;
 public enum TreasureKind {
     ARMOR,ONEHAND,BOTHHAND,HELMET,SHOE,NECKLACE
 }
+
+
