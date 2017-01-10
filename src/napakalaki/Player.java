@@ -27,7 +27,7 @@ public class Player {
     private ArrayList<Treasure> visibleTreasures;
     private ArrayList<Treasure> hiddenTreasures;
     private BadConsequence      pendingBadConsequence;
-    private Player              enemy;
+    protected Player            enemy;
 
     // Constructor de copia
     public Player(Player p) {
@@ -47,7 +47,7 @@ public class Player {
         this.level                 = 1;
         this.hiddenTreasures       = new ArrayList<Treasure>();
         this.visibleTreasures      = new ArrayList<Treasure>();
-        this.pendingBadConsequence = new BadConsequence("", 0, 0, 0);
+        this.pendingBadConsequence = new NumericBadConsequence("", 0, 0, 0);
     }
 
     /////////////////////////////////////////////////////////////////
@@ -154,7 +154,7 @@ public class Player {
         return canI;
     }
 
-    public boolean canYouGiveMeATreasure() {
+    protected boolean canYouGiveMeATreasure() {
         if (this.hiddenTreasures.isEmpty() && this.visibleTreasures.isEmpty()) {
             return false;
         } else {
@@ -167,12 +167,24 @@ public class Player {
         int          myLevel      = this.getCombatLevel();
         int          monsterLevel = m.getLevel();
 
+        System.out.println("********----------********----------********----------");
+        System.out.println(myLevel);
+        System.out.println(monsterLevel);
+        System.out.println("********----------*****canISteal()-------********----------");
+        System.out.println(canISteal());
+
         if (!this.canISteal()) {
             Dice dice   = Dice.getInstance();
             int  number = dice.nextNumber();
 
+            System.out.println("********----------number********----------");
+            System.out.println(number);
+
             if (number < 3) {
-                int enemyLevel = enemy.getCombatLevel();
+                System.out.println("********------this.enemy.getCombatLevel()****----------");
+                System.out.println(this.enemy.getCombatLevel());
+
+                int enemyLevel = this.enemy.getCombatLevel();
 
                 monsterLevel += enemyLevel;
             }
@@ -186,12 +198,19 @@ public class Player {
             } else {
                 comb = CombatResult.WIN;
             }
+
+            return comb;
         } else {
             this.applyBadConsequence(m);
-            comb = CombatResult.LOSE;
-        }
 
-        return comb;
+            if (this.shouldConvert()) {
+                comb = CombatResult.LOSEANDCONVERT;
+            } else {
+                comb = CombatResult.LOSE;
+            }
+
+            return comb;
+        }
     }
 
     private void decrementLevels(int l) {
@@ -242,7 +261,7 @@ public class Player {
         this.dieIfNoTreasures();
     }
 
-    public Treasure giveMeATreasure() {
+    protected Treasure giveMeATreasure() {
         Random rand = new Random();
 
         return this.hiddenTreasures.get(rand.nextInt(this.hiddenTreasures.size() + 1));
@@ -341,6 +360,19 @@ public class Player {
         }
     }
 
+    protected boolean shouldConvert() {
+
+        // Lanzamos los dados, si es 6 return true
+        Dice    dice   = Dice.getInstance();
+        boolean should = false;
+
+        if (dice.nextNumber() == 6) {
+            should = true;
+        }
+
+        return should;
+    }
+
     /////////////////////////////////////////////////
     public Treasure stealTreasure() {
         Treasure treasure = null;
@@ -371,31 +403,30 @@ public class Player {
         return stateOK;
     }
 
-    private int getCombatLevel() {
-        int     combatLevel    = this.level;
-        boolean collarEquipado = false;
+    protected int getCombatLevel() {
+        System.out.println("********----------****this.level-----********----------");
+        System.out.println(this.level);
 
-        for (int i = 0; (i < this.visibleTreasures.size()) &&!collarEquipado; i++) {
-            if (this.visibleTreasures.get(i).getType() == TreasureKind.NECKLACE) {
-                collarEquipado = true;
-            }
+        int combatLevel = this.level;
+
+        // SUMAR TESOROS VISIBLES
+        for (int i = 0; i < this.visibleTreasures.size(); i++) {
+            combatLevel += this.visibleTreasures.get(i).getGainedLevels();
+            System.out.println("visibleTreasures--->" + this.visibleTreasures.get(i).getGainedLevels());
         }
 
-        if (collarEquipado) {
-            for (int i = 0; i < this.visibleTreasures.size(); i++) {
-                combatLevel += this.visibleTreasures.get(i).getMaxBonus();
-            }
-        } else {
-            for (int i = 0; i < this.visibleTreasures.size(); i++) {
-                combatLevel += this.visibleTreasures.get(i).getMinBonus();
-            }
-        }
+        System.out.println("********----------****combatLevel-----********----------");
+        System.out.println(combatLevel);
 
         return combatLevel;
     }
 
     public boolean isDead() {
         return this.dead;
+    }
+
+    protected Player getEnemy() {
+        return this.enemy;
     }
 
     public void setEnemy(Player enemy) {
@@ -412,6 +443,10 @@ public class Player {
 
     public String getName() {
         return this.name;
+    }
+
+    protected int getOponentLevel(Monster m) {
+        return this.enemy.getCombatLevel();
     }
 
     private void setPendingBadConsequence(BadConsequence b) {

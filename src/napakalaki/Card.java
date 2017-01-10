@@ -11,7 +11,7 @@ package napakalaki;
  * @author minelli
  */
 public interface Card {
-    public int getBasicValue();
+    public int getGainedLevels();
 
-    public int getSpecialValue();
+    public int getCombatLevelAgainstCultistPlayer();
 }

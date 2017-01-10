@@ -148,7 +148,7 @@ public class PruebaNapakalaki {
         badCons     = "Pierdes 5 niveles y 3 tesoros visibles.";
         death       = false;
         p           = new Prize(3, 2);
-        b           = new BadConsequence(badCons, 5, 3, 0);
+        b           = BadConsequenceFactory.create(badCons, 5, 3, 0);
         m           = new Monster(nameMonster, 11, b, p);
         monstruos.add(m);
 
@@ -157,10 +157,10 @@ public class PruebaNapakalaki {
         badCons     = "Pierdes tu armadura visible y otra oculta.";
         death       = false;
         p           = new Prize(2, 1);
-        b           = new BadConsequence(badCons,
-                                         0,
-                                         new ArrayList(Arrays.asList(TreasureKind.ARMOR)),
-                                         new ArrayList(Arrays.asList(TreasureKind.ARMOR)));
+        b           = BadConsequenceFactory.create(badCons,
+                                                   0,
+                                                   new ArrayList(Arrays.asList(TreasureKind.ARMOR)),
+                                                   new ArrayList(Arrays.asList(TreasureKind.ARMOR)));
         m = new Monster(nameMonster, 8, b, p);
         monstruos.add(m);
 
@@ -169,11 +169,11 @@ public class PruebaNapakalaki {
         badCons     = "Embobados con el lindo primigenio te descartas de tu casco visible.";
         death       = false;
         p           = new Prize(1, 1);
-        b           = new BadConsequence(badCons,
-                                         0,
-                                         new ArrayList(Arrays.asList(TreasureKind.HELMET)),
-                                         new ArrayList());
-        m           = new Monster(nameMonster, 2, b, p);
+        b           = BadConsequenceFactory.create(badCons,
+                                                   0,
+                                                   new ArrayList(Arrays.asList(TreasureKind.HELMET)),
+                                                   new ArrayList());
+        m = new Monster(nameMonster, 2, b, p);
         monstruos.add(m);
 
         // ************************El Sopor de Dunwich**************************
@@ -181,7 +181,10 @@ public class PruebaNapakalaki {
         badCons     = "El primordial bostezo contagioso. Pierdes el calzado visible.";
         death       = false;
         p           = new Prize(1, 1);
-        b           = new BadConsequence(badCons, 0, new ArrayList(Arrays.asList(TreasureKind.SHOE)), new ArrayList());
+        b           = BadConsequenceFactory.create(badCons,
+                                                   0,
+                                                   new ArrayList(Arrays.asList(TreasureKind.SHOE)),
+                                                   new ArrayList());
         m           = new Monster(nameMonster, 2, b, p);
         monstruos.add(m);
 
@@ -191,10 +194,10 @@ public class PruebaNapakalaki {
             "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. Descarta 1 mano visible y 1 mano oculta.";
         death = false;
         p     = new Prize(4, 1);
-        b     = new BadConsequence(badCons,
-                                   0,
-                                   new ArrayList(Arrays.asList(TreasureKind.ONEHAND)),
-                                   new ArrayList(Arrays.asList(TreasureKind.ONEHAND)));
+        b     = BadConsequenceFactory.create(badCons,
+                                             0,
+                                             new ArrayList(Arrays.asList(TreasureKind.ONEHAND)),
+                                             new ArrayList(Arrays.asList(TreasureKind.ONEHAND)));
         m = new Monster(nameMonster, 2, b, p);
         monstruos.add(m);
 
@@ -203,7 +206,7 @@ public class PruebaNapakalaki {
         badCons     = "Pierdes todos tus tesoros visibles.";
         death       = false;
         p           = new Prize(3, 1);
-        b           = new BadConsequence(badCons, 0, Integer.MAX_VALUE, 0);
+        b           = BadConsequenceFactory.create(badCons, 0, Integer.MAX_VALUE, 0);
         m           = new Monster(nameMonster, 13, b, p);
         monstruos.add(m);
 
@@ -212,7 +215,10 @@ public class PruebaNapakalaki {
         badCons     = "Pierdes la armadura visible.";
         death       = false;
         p           = new Prize(1, 1);
-        b           = new BadConsequence(badCons, 0, new ArrayList(Arrays.asList(TreasureKind.ARMOR)), new ArrayList());
+        b           = BadConsequenceFactory.create(badCons,
+                                                   0,
+                                                   new ArrayList(Arrays.asList(TreasureKind.ARMOR)),
+                                                   new ArrayList());
         m           = new Monster(nameMonster, 13, b, p);
         monstruos.add(m);
 
@@ -221,7 +227,10 @@ public class PruebaNapakalaki {
         badCons     = "Sientes bichos bajo la ropa. Descarta la armadura visible.";
         death       = false;
         p           = new Prize(3, 1);
-        b           = new BadConsequence(badCons, 0, new ArrayList(Arrays.asList(TreasureKind.ARMOR)), new ArrayList());
+        b           = BadConsequenceFactory.create(badCons,
+                                                   0,
+                                                   new ArrayList(Arrays.asList(TreasureKind.ARMOR)),
+                                                   new ArrayList());
         m           = new Monster(nameMonster, 13, b, p);
         monstruos.add(m);
 
@@ -230,7 +239,7 @@ public class PruebaNapakalaki {
         badCons     = "Toses los pulmones y pierdes 2 niveles.";
         death       = false;
         p           = new Prize(1, 1);
-        b           = new BadConsequence(badCons, 2, 0, 0);
+        b           = BadConsequenceFactory.create(badCons, 2, 0, 0);
         m           = new Monster(nameMonster, 2, b, p);
         monstruos.add(m);
 
@@ -239,7 +248,7 @@ public class PruebaNapakalaki {
         badCons     = "Estos monstruos resultan bastante superficiales y te aburren mortalmente. Estas muerto.";
         death       = true;
         p           = new Prize(2, 1);
-        b           = new BadConsequence(badCons, death);
+        b           = BadConsequenceFactory.create(badCons, 0, 0, 0, death);
         m           = new Monster(nameMonster, 8, b, p);
         monstruos.add(m);
 
@@ -248,7 +257,7 @@ public class PruebaNapakalaki {
         badCons     = "Pierdes 2 niveles y 2 tesoros ocultos.";
         death       = false;
         p           = new Prize(2, 1);
-        b           = new BadConsequence(badCons, 2, 0, 2);
+        b           = BadConsequenceFactory.create(badCons, 2, 0, 2);
         m           = new Monster(nameMonster, 4, b, p);
         monstruos.add(m);
 
@@ -257,11 +266,11 @@ public class PruebaNapakalaki {
         badCons     = "Te intentas escaquear. Pierdes una mano visible.";
         death       = false;
         p           = new Prize(2, 1);
-        b           = new BadConsequence(badCons,
-                                         0,
-                                         new ArrayList(Arrays.asList(TreasureKind.ONEHAND)),
-                                         new ArrayList());
-        m           = new Monster(nameMonster, 1, b, p);
+        b           = BadConsequenceFactory.create(badCons,
+                                                   0,
+                                                   new ArrayList(Arrays.asList(TreasureKind.ONEHAND)),
+                                                   new ArrayList());
+        m = new Monster(nameMonster, 1, b, p);
         monstruos.add(m);
 
         // ************************Polllipólipo Volante*************************
@@ -269,7 +278,7 @@ public class PruebaNapakalaki {
         badCons     = "Da mucho asquito. Pierdes 3 niveles.";
         death       = false;
         p           = new Prize(2, 1);
-        b           = new BadConsequence(badCons, 3, 0, 0);
+        b           = BadConsequenceFactory.create(badCons, 3, 0, 0);
         m           = new Monster(nameMonster, 3, b, p);
         monstruos.add(m);
 
@@ -278,7 +287,7 @@ public class PruebaNapakalaki {
         badCons     = "No le hace gracia que pronuncien mal su nombre. Estas muerto.";
         death       = true;
         p           = new Prize(3, 1);
-        b           = new BadConsequence(badCons, death);
+        b           = BadConsequenceFactory.create(badCons, 0, 0, 0, death);
         m           = new Monster(nameMonster, 14, b, p);
         monstruos.add(m);
 
@@ -287,7 +296,7 @@ public class PruebaNapakalaki {
         badCons     = "La familia te atrapa. Estáss muerto.";
         death       = true;
         p           = new Prize(3, 1);
-        b           = new BadConsequence(badCons, death);
+        b           = BadConsequenceFactory.create(badCons, 0, 0, 0, death);
         m           = new Monster(nameMonster, 1, b, p);
         monstruos.add(m);
 
@@ -296,11 +305,11 @@ public class PruebaNapakalaki {
         badCons     = "La quinta directiva primaria te obliga a perder 2 niveles y un tesoro 2 manos visible.";
         death       = false;
         p           = new Prize(2, 1);
-        b           = new BadConsequence(badCons,
-                                         2,
-                                         new ArrayList(Arrays.asList(TreasureKind.BOTHHAND)),
-                                         new ArrayList());
-        m           = new Monster(nameMonster, 8, b, p);
+        b           = BadConsequenceFactory.create(badCons,
+                                                   2,
+                                                   new ArrayList(Arrays.asList(TreasureKind.BOTHHAND)),
+                                                   new ArrayList());
+        m = new Monster(nameMonster, 8, b, p);
         monstruos.add(m);
 
         // ****************************El Espía Sordo***************************
@@ -308,11 +317,11 @@ public class PruebaNapakalaki {
         badCons     = "Te asusta en la noche. Pierdes un casco visible.";
         death       = false;
         p           = new Prize(1, 1);
-        b           = new BadConsequence(badCons,
-                                         2,
-                                         new ArrayList(Arrays.asList(TreasureKind.HELMET)),
-                                         new ArrayList());
-        m           = new Monster(nameMonster, 5, b, p);
+        b           = BadConsequenceFactory.create(badCons,
+                                                   2,
+                                                   new ArrayList(Arrays.asList(TreasureKind.HELMET)),
+                                                   new ArrayList());
+        m = new Monster(nameMonster, 5, b, p);
         monstruos.add(m);
 
         // ********************************Tongue*******************************
@@ -320,7 +329,7 @@ public class PruebaNapakalaki {
         badCons     = "Menudo susto te llevas. Pierdes 2 niveles y 5 tesoros visibles.";
         death       = false;
         p           = new Prize(2, 1);
-        b           = new BadConsequence(badCons, 2, 5, 0);
+        b           = BadConsequenceFactory.create(badCons, 2, 5, 0);
         m           = new Monster(nameMonster, 19, b, p);
         monstruos.add(m);
 
@@ -329,12 +338,12 @@ public class PruebaNapakalaki {
         badCons     = "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros visibles de las manos.";
         death       = false;
         p           = new Prize(2, 1);
-        b           = new BadConsequence(badCons,
-                                         3,
-                                         new ArrayList(Arrays.asList(TreasureKind.ONEHAND,
-                                                                     TreasureKind.ONEHAND,
-                                                                     TreasureKind.BOTHHAND)),
-                                         new ArrayList());
+        b           = BadConsequenceFactory.create(badCons,
+                                                   3,
+                                                   new ArrayList(Arrays.asList(TreasureKind.ONEHAND,
+                                                                               TreasureKind.ONEHAND,
+                                                                               TreasureKind.BOTHHAND)),
+                                                   new ArrayList());
         m = new Monster(nameMonster, 21, b, p);
         monstruos.add(m);
         printMonsters(monstruos);

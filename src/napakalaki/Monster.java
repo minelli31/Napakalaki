@@ -17,16 +17,27 @@ import static napakalaki.PruebaNapakalaki.tamMonsters;
  */
 @SuppressWarnings("FieldMayBeFinal")
 public class Monster {
-    private final String         name;
-    private final int            combatLevel;
-    private final Prize          prize;
-    private final BadConsequence badConsequence;
+    private String         name;
+    private int            combatLevel;
+    private Prize          prize;
+    private BadConsequence badConsequence;
+    private int            levelChangeAgainstCultistPlayer;
 
     public Monster(String name, int combatLevel, BadConsequence badConsequence, Prize prize) {
-        this.name           = name;
-        this.combatLevel    = combatLevel;
-        this.badConsequence = badConsequence;
-        this.prize          = prize;
+        this.name                            = name;
+        this.combatLevel                     = combatLevel;
+        this.badConsequence                  = badConsequence;
+        this.prize                           = prize;
+        this.levelChangeAgainstCultistPlayer = 0;
+    }
+
+    public Monster(String name, int combatLevel, BadConsequence badConsequence, Prize prize,
+                   int levelChangeAgainstCultistPlayer) {
+        this.name                            = name;
+        this.combatLevel                     = combatLevel;
+        this.badConsequence                  = badConsequence;
+        this.prize                           = prize;
+        this.levelChangeAgainstCultistPlayer = levelChangeAgainstCultistPlayer;
     }
 
     @Override
@@ -48,15 +59,19 @@ public class Monster {
     }
 
     public int getBadnHiddenTreasures() {
-        return this.badConsequence.getNHiddenTreasures();
+        return ((NumericBadConsequence) this.badConsequence).getNHiddenTreasures();
     }
 
     public int getBadnVisibleTreasures() {
-        return this.badConsequence.getNVisibleTreasures();
+        return ((NumericBadConsequence) this.badConsequence).getNVisibleTreasures();
+    }
+
+    public int getCombatLevelAgainstCultistPlayer() {
+        return this.levelChangeAgainstCultistPlayer + this.getLevel();
     }
 
     public boolean getDeath() {
-        return this.badConsequence.getDeath();
+        return ((DeathBadConsequence) this.badConsequence).getDeath();
     }
 
     public int getLevel() {
@@ -75,12 +90,16 @@ public class Monster {
         return this.prize.getLevels();
     }
 
+    public int getSpecialValue() {
+        return this.getLevel() + this.levelChangeAgainstCultistPlayer;
+    }
+
     public ArrayList<TreasureKind> getSpecificHiddenTreasures() {
-        return this.badConsequence.getSpecificHidden();
+        return ((SpecificBadConsequence) this.badConsequence).getSpecificHidden();
     }
 
     public ArrayList<TreasureKind> getSpecificVisibleTreasures() {
-        return this.badConsequence.getSpecificVisible();
+        return ((SpecificBadConsequence) this.badConsequence).getSpecificVisible();
     }
 
     public int getTreasuresGained() {

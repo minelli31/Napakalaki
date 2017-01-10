@@ -44,7 +44,8 @@ public class Napakalaki {
     // Variables privadas
     private static final Napakalaki instance = new Napakalaki();
     private CardDealer              dealer   = CardDealer.getInstance();
-    private Dice dice;
+    private Dice                    dice;
+
     // Atributos de referencia
     private Player            currentPlayer;
     private ArrayList<Player> players;
@@ -53,13 +54,23 @@ public class Napakalaki {
 
     private Napakalaki() {
         this.nextPlayerIndex = -1;
-        dice   = Dice.getInstance();
+        dice                 = Dice.getInstance();
     }
 
     public CombatResult developCombat() {
+        System.out.println("********----------****developCombat----********----------");
+
         CombatResult comb = this.currentPlayer.combat(currentMonster);
 
-        this.dealer.giveMonsterBack(currentMonster);
+        System.out.println("comb " + comb);
+        this.dealer.giveMonsterBack(this.currentMonster);
+
+        if (comb == CombatResult.LOSEANDCONVERT) {
+            CultistPlayer c = new CultistPlayer(this.currentPlayer, this.dealer.nextCultist());
+
+            this.currentPlayer = c;
+            this.players.set(this.nextPlayerIndex, c);
+        }
 
         return comb;
     }
