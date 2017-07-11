@@ -66,6 +66,10 @@ public class Monster {
         return ((NumericBadConsequence) this.badConsequence).getNVisibleTreasures();
     }
 
+    public int getCombatLevel() {
+        return combatLevel;
+    }
+
     public int getCombatLevelAgainstCultistPlayer() {
         return this.levelChangeAgainstCultistPlayer + this.getLevel();
     }
@@ -84,6 +88,10 @@ public class Monster {
 
     public String getName() {
         return this.name;
+    }
+
+    public Prize getPrize() {
+        return prize;
     }
 
     public int getPrizeLevels() {
@@ -105,4 +113,5 @@ public class Monster {
     public int getTreasuresGained() {
         return prize.getTreasures();
     }
+
 }

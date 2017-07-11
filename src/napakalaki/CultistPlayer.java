@@ -36,7 +36,7 @@ public class CultistPlayer extends Player {
     protected Treasure giveMeATreasure() {
         Random rand = new Random();
 
-        return this.getVisibleTreasures().get(rand.nextInt(this.getVisibleTreasures().size() + 1));
+        return this.getVisibleTreasures().get(rand.nextInt(this.getVisibleTreasures().size()));
     }
 
     protected boolean shouldConvert() {
@@ -44,7 +44,7 @@ public class CultistPlayer extends Player {
     }
 
     @Override
-    protected int getCombatLevel() {
+    public int getCombatLevel() {
         int combat = super.getCombatLevel() + (int) (super.getCombatLevel() * 0.7);
 
         combat += (int) (myCultistCard.getGainedLevels() * this.totalCultistPlayers);
@@ -57,7 +57,7 @@ public class CultistPlayer extends Player {
     }
 
     @Override
-    protected Player getEnemy() {
+    public Player getEnemy() {
         return super.getEnemy();
     }
 

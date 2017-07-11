@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import GUI.Dice;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -19,41 +21,41 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class Player {
 
     // Variables privadas
-    public static final int     MAXLEVEL = 10;
-    private boolean             dead;
-    private boolean             canISteal;
-    private String              name;
-    private int                 level;
+    public static final int MAXLEVEL = 10;
+    private boolean dead;
+    private boolean canISteal;
+    private String name;
+    private int level;
     private ArrayList<Treasure> visibleTreasures;
     private ArrayList<Treasure> hiddenTreasures;
-    private BadConsequence      pendingBadConsequence;
-    protected Player            enemy;
+    private BadConsequence pendingBadConsequence;
+    protected Player enemy;
 
     // Constructor de copia
     public Player(Player p) {
-        this.name                  = p.name;
-        this.dead                  = p.dead;
-        this.level                 = p.level;
-        this.hiddenTreasures       = p.hiddenTreasures;
-        this.visibleTreasures      = p.visibleTreasures;
+        this.name = p.name;
+        this.dead = p.dead;
+        this.level = p.level;
+        this.hiddenTreasures = p.hiddenTreasures;
+        this.visibleTreasures = p.visibleTreasures;
         this.pendingBadConsequence = p.pendingBadConsequence;
     }
 
     // Constructor
     public Player(String name) {
-        this.name                  = name;
-        this.dead                  = true;
-        this.canISteal             = true;
-        this.level                 = 1;
-        this.hiddenTreasures       = new ArrayList<Treasure>();
-        this.visibleTreasures      = new ArrayList<Treasure>();
+        this.name = name;
+        this.dead = true;
+        this.canISteal = true;
+        this.level = 1;
+        this.hiddenTreasures = new ArrayList<Treasure>();
+        this.visibleTreasures = new ArrayList<Treasure>();
         this.pendingBadConsequence = new NumericBadConsequence("", 0, 0, 0);
     }
 
     /////////////////////////////////////////////////////////////////
     private void applyBadConsequence(Monster m) {
         BadConsequence badConsequence = m.getBadConsequence();
-        int            nLevels        = badConsequence.getLevels();
+        int nLevels = badConsequence.getLevels();
 
         this.decrementLevels(nLevels);
     }
@@ -83,12 +85,12 @@ public class Player {
     }
 
     private boolean canMakeTreasureVisible(Treasure t) {
-        boolean canI     = false;
-        int     ARMOR    = 0,
-                ONEHAND  = 0,
+        boolean canI = false;
+        int ARMOR = 0,
+                ONEHAND = 0,
                 BOTHHAND = 0,
-                HELMET   = 0,
-                SHOE     = 0,
+                HELMET = 0,
+                SHOE = 0,
                 NECKLACE = 0;
 
         for (Treasure tr : this.visibleTreasures) {
@@ -108,47 +110,47 @@ public class Player {
         }
 
         switch (t.getType()) {
-        case ARMOR :
-            if (ARMOR == 0) {
-                canI = true;
-            }
+            case ARMOR:
+                if (ARMOR == 0) {
+                    canI = true;
+                }
 
-            break;
+                break;
 
-        case ONEHAND :
-            if ((ONEHAND < 2) && (BOTHHAND == 0)) {
-                canI = true;
-            }
+            case ONEHAND:
+                if ((ONEHAND < 2) && (BOTHHAND == 0)) {
+                    canI = true;
+                }
 
-            break;
+                break;
 
-        case BOTHHAND :
-            if ((BOTHHAND == 0) && (ONEHAND == 0)) {
-                canI = true;
-            }
+            case BOTHHAND:
+                if ((BOTHHAND == 0) && (ONEHAND == 0)) {
+                    canI = true;
+                }
 
-            break;
+                break;
 
-        case HELMET :
-            if (HELMET == 0) {
-                canI = true;
-            }
+            case HELMET:
+                if (HELMET == 0) {
+                    canI = true;
+                }
 
-            break;
+                break;
 
-        case SHOE :
-            if (SHOE == 0) {
-                canI = true;
-            }
+            case SHOE:
+                if (SHOE == 0) {
+                    canI = true;
+                }
 
-            break;
+                break;
 
-        case NECKLACE :
-            if (NECKLACE == 0) {
-                canI = true;
-            }
+            case NECKLACE:
+                if (NECKLACE == 0) {
+                    canI = true;
+                }
 
-            break;
+                break;
         }
 
         return canI;
@@ -163,28 +165,27 @@ public class Player {
     }
 
     public CombatResult combat(Monster m) {
-        CombatResult comb         = null;
-        int          myLevel      = this.getCombatLevel();
-        int          monsterLevel = m.getLevel();
+        CombatResult comb = null;
+        int myLevel = this.getCombatLevel();
+        int monsterLevel = m.getLevel();
 
-        System.out.println("********----------********----------********----------");
+        System.out.println("********----------****combat principio-------********----------");
         System.out.println(myLevel);
         System.out.println(monsterLevel);
         System.out.println("********----------*****canISteal()-------********----------");
         System.out.println(canISteal());
 
         if (!this.canISteal()) {
-            Dice dice   = Dice.getInstance();
-            int  number = dice.nextNumber();
+            Dice dice = Dice.getInstance();
+            int number = dice.nextNumber();
 
             System.out.println("********----------number********----------");
             System.out.println(number);
 
             if (number < 3) {
-                System.out.println("********------this.enemy.getCombatLevel()****----------");
-                System.out.println(this.enemy.getCombatLevel());
 
-                int enemyLevel = this.enemy.getCombatLevel();
+                // int enemyLevel = this.enemy.getCombatLevel();
+                int enemyLevel = this.getOponentLevel(m);
 
                 monsterLevel += enemyLevel;
             }
@@ -244,7 +245,7 @@ public class Player {
     public void discardHiddenTreasure(Treasure t) {
         this.hiddenTreasures.remove(t);
 
-        if ((this.pendingBadConsequence != null) &&!this.pendingBadConsequence.isEmpty()) {
+        if ((this.pendingBadConsequence != null) && !this.pendingBadConsequence.isEmpty()) {
             this.pendingBadConsequence.substractVisibleTreasure(t);
         }
 
@@ -254,7 +255,7 @@ public class Player {
     public void discardVisibleTreasure(Treasure t) {
         this.visibleTreasures.remove(t);
 
-        if ((this.pendingBadConsequence != null) &&!this.pendingBadConsequence.isEmpty()) {
+        if ((this.pendingBadConsequence != null) && !this.pendingBadConsequence.isEmpty()) {
             this.pendingBadConsequence.substractVisibleTreasure(t);
         }
 
@@ -264,7 +265,7 @@ public class Player {
     protected Treasure giveMeATreasure() {
         Random rand = new Random();
 
-        return this.hiddenTreasures.get(rand.nextInt(this.hiddenTreasures.size() + 1));
+        return this.hiddenTreasures.get(rand.nextInt(this.hiddenTreasures.size()));
     }
 
     public void haveStolen() {
@@ -307,8 +308,8 @@ public class Player {
 
     public void initTreasures() {
         CardDealer dealer = CardDealer.getInstance();
-        Treasure   treasure;
-        Dice       dice = Dice.getInstance();
+        Treasure treasure;
+        Dice dice = Dice.getInstance();
 
         this.bringToLife();
         treasure = dealer.nextTreasure();
@@ -317,35 +318,35 @@ public class Player {
         int number = dice.nextNumber();
 
         switch (number) {
-        case 1 :
-            treasure = dealer.nextTreasure();
-            this.hiddenTreasures.add(treasure);
-
-            break;
-
-        case 6 : {
-            int i = 0;
-
-            while (i < 3) {
+            case 1:
                 treasure = dealer.nextTreasure();
                 this.hiddenTreasures.add(treasure);
-                i++;
+
+                break;
+
+            case 6: {
+                int i = 0;
+
+                while (i < 3) {
+                    treasure = dealer.nextTreasure();
+                    this.hiddenTreasures.add(treasure);
+                    i++;
+                }
+
+                break;
             }
 
-            break;
-        }
+            default: {
+                int i = 0;
 
-        default : {
-            int i = 0;
+                while (i < 2) {
+                    treasure = dealer.nextTreasure();
+                    this.hiddenTreasures.add(treasure);
+                    i++;
+                }
 
-            while (i < 2) {
-                treasure = dealer.nextTreasure();
-                this.hiddenTreasures.add(treasure);
-                i++;
+                break;
             }
-
-            break;
-        }
         }
     }
 
@@ -363,7 +364,7 @@ public class Player {
     protected boolean shouldConvert() {
 
         // Lanzamos los dados, si es 6 return true
-        Dice    dice   = Dice.getInstance();
+        Dice dice = Dice.getInstance();
         boolean should = false;
 
         if (dice.nextNumber() == 6) {
@@ -403,7 +404,7 @@ public class Player {
         return stateOK;
     }
 
-    protected int getCombatLevel() {
+    public int getCombatLevel() {
         System.out.println("********----------****this.level-----********----------");
         System.out.println(this.level);
 
@@ -425,7 +426,7 @@ public class Player {
         return this.dead;
     }
 
-    protected Player getEnemy() {
+    public Player getEnemy() {
         return this.enemy;
     }
 
@@ -449,11 +450,34 @@ public class Player {
         return this.enemy.getCombatLevel();
     }
 
+    public BadConsequence getPendingBadConsequence() {
+        return pendingBadConsequence;
+    }
+
     private void setPendingBadConsequence(BadConsequence b) {
         this.pendingBadConsequence = b;
     }
 
     public ArrayList<Treasure> getVisibleTreasures() {
         return this.visibleTreasures;
+    }
+
+    ArrayList<Treasure> getExtraTreasures() {
+        ArrayList<Treasure> extraTreasures = new ArrayList();
+        for (int i=0; i<this.hiddenTreasures.size(); i++){
+            if(i>4){
+                extraTreasures.add(this.hiddenTreasures.get(i));
+            }
+        }
+      return extraTreasures;
+    }
+
+    void receiveTreasures(ArrayList<Treasure> extraTreasures) {
+        for(Treasure t : extraTreasures){
+            if(this.hiddenTreasures.size()>4){
+                extraTreasures.add(t);
+                this.hiddenTreasures.remove(t);
+            }
+        }        
     }
 }

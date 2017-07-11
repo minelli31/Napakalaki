@@ -6,6 +6,7 @@
  */
 package napakalaki;
 
+import GUI.Dice;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -14,47 +15,46 @@ import java.util.Random;
  *
  * @author minelli
  */
-
 /**
  * Variable de instancia
  *
- * En programación orientada a objetos, una variable de instancia o miembro de dato
- * es una variable que se relaciona con una única instancia de una clase.
+ * En programación orientada a objetos, una variable de instancia o miembro de
+ * dato es una variable que se relaciona con una única instancia de una clase.
  *
- * Cada vez que se crea un objeto, el sistema crea una copia de todas las variables
- * que están vinculadas con dicha clase, haciéndolas propias de esa instancia.
- * Solamente se puede acceder a ellas a través del identificador del objeto.
+ * Cada vez que se crea un objeto, el sistema crea una copia de todas las
+ * variables que están vinculadas con dicha clase, haciéndolas propias de esa
+ * instancia. Solamente se puede acceder a ellas a través del identificador del
+ * objeto.
  *
  * Estas variables son declaradas fuera del cuerpo de los métodos y dentro de la
  * clase, por lo tanto son de tipo global. Por ende, pueden ser utilizadas por
  * cualquier método no estático de dicha clase.
  */
-
 /**
  * Variable de clase
  *
  * En programación orientada a objetos, una variable de clase o miembro de dato
  * estático es una variable, al contrario que las variable de instancia, propia
- * de la clase que la contiene, y no de instancias de la misma, esto quiere decir
- * que todos los objetos que se creen de esta clase comparten su valor, son
- * llamadas variables estáticas.
+ * de la clase que la contiene, y no de instancias de la misma, esto quiere
+ * decir que todos los objetos que se creen de esta clase comparten su valor,
+ * son llamadas variables estáticas.
  */
 public class Napakalaki {
 
     // Variables privadas
     private static final Napakalaki instance = new Napakalaki();
-    private CardDealer              dealer   = CardDealer.getInstance();
-    private Dice                    dice;
+    private CardDealer dealer = CardDealer.getInstance();
+    private Dice dice;
 
     // Atributos de referencia
-    private Player            currentPlayer;
+    private Player currentPlayer;
     private ArrayList<Player> players;
-    private Monster           currentMonster;
-    private int               nextPlayerIndex;
+    private Monster currentMonster;
+    private int nextPlayerIndex;
 
-    private Napakalaki() {
+    Napakalaki() {
         this.nextPlayerIndex = -1;
-        dice                 = Dice.getInstance();
+        dice = Dice.getInstance();
     }
 
     public CombatResult developCombat() {
@@ -68,14 +68,22 @@ public class Napakalaki {
         if (comb == CombatResult.LOSEANDCONVERT) {
             CultistPlayer c = new CultistPlayer(this.currentPlayer, this.dealer.nextCultist());
 
-            this.currentPlayer = c;
             this.players.set(this.nextPlayerIndex, c);
+
+            for (Player p : this.players) {
+                if (p.enemy == this.currentPlayer) {
+                    p.enemy = c;
+                }
+            }
+
+            this.currentPlayer = c;
         }
 
         return comb;
     }
 
-    public void discardAllTreasures() {}
+    public void discardAllTreasures() {
+    }
 
     public void discardHiddenTreasures(ArrayList<Treasure> treasure) {
         for (Treasure tr : treasure) {
@@ -135,7 +143,7 @@ public class Napakalaki {
 
         if (stateOK) {
             this.currentMonster = dealer.nextMonster();
-            this.currentPlayer  = this.nextPlayer();
+            this.currentPlayer = this.nextPlayer();
 
             if (this.currentPlayer.isDead()) {
                 this.currentPlayer.initTreasures();
@@ -147,8 +155,8 @@ public class Napakalaki {
 
     private boolean nextTurnAllowed() {
         return (this.currentPlayer == null)
-               ? true
-               : this.currentPlayer.validState();
+                ? true
+                : this.currentPlayer.validState();
     }
 
     public Monster getCurrentMonster() {
@@ -175,5 +183,16 @@ public class Napakalaki {
 
     public static Napakalaki getInstance() {
         return instance;
+    }
+
+    public void nextTurnExam() {
+            Player p = this.currentPlayer;
+            ArrayList<Treasure> extraTreasures = new ArrayList();
+            if(p.getHiddenTreasures().size()>4){                
+                extraTreasures = this.currentPlayer.getExtraTreasures();
+            }
+            Monster nextM = this.dealer.nextMonster();
+            this.nextPlayer();
+            this.currentPlayer.receiveTreasures(extraTreasures);
     }
 }
