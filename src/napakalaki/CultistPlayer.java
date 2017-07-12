@@ -68,4 +68,16 @@ public class CultistPlayer extends Player {
     static int getTotalCultistPlayers() {
         return CultistPlayer.totalCultistPlayers;
     }
+    
+    @Override
+    public void useJoker() {
+        super.useJoker();
+        CardDealer dealer = CardDealer.getInstance();
+        if(!visibleTreasures.isEmpty()){
+            Random rand = new Random();
+            Treasure tesoro = visibleTreasures.get(rand.nextInt(visibleTreasures.size()));
+            visibleTreasures.remove(tesoro);
+            dealer.giveTreasureBack(tesoro);
+        }
+    }
 }

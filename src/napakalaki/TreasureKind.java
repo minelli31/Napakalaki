@@ -10,7 +10,7 @@ package napakalaki;
  * @author minelli
  */
 public enum TreasureKind {
-    ARMOR,ONEHAND,BOTHHAND,HELMET,SHOE,NECKLACE
+    ARMOR,ONEHAND,BOTHHAND,HELMET,SHOE,NECKLACE,JOKER
 }
 
 

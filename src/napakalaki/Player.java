@@ -26,9 +26,9 @@ public class Player {
     private boolean canISteal;
     private String name;
     private int level;
-    private ArrayList<Treasure> visibleTreasures;
-    private ArrayList<Treasure> hiddenTreasures;
-    private BadConsequence pendingBadConsequence;
+    protected ArrayList<Treasure> visibleTreasures;
+    protected ArrayList<Treasure> hiddenTreasures;
+    protected BadConsequence pendingBadConsequence;
     protected Player enemy;
 
     // Constructor de copia
@@ -86,12 +86,13 @@ public class Player {
 
     private boolean canMakeTreasureVisible(Treasure t) {
         boolean canI = false;
-        int ARMOR = 0,
+        int     ARMOR = 0,
                 ONEHAND = 0,
                 BOTHHAND = 0,
                 HELMET = 0,
                 SHOE = 0,
-                NECKLACE = 0;
+                NECKLACE = 0,
+                JOKER = 0;
 
         for (Treasure tr : this.visibleTreasures) {
             if (tr.getType() == TreasureKind.ARMOR) {
@@ -106,6 +107,8 @@ public class Player {
                 SHOE++;
             } else if (tr.getType() == TreasureKind.NECKLACE) {
                 NECKLACE++;
+            } else if (tr.getType() == TreasureKind.JOKER) {
+                JOKER++;
             }
         }
 
@@ -151,13 +154,20 @@ public class Player {
                 }
 
                 break;
+                
+            case JOKER:
+                if (JOKER == 0) {
+                    canI = true;
+                }
+
+                break;
         }
 
         return canI;
     }
 
     protected boolean canYouGiveMeATreasure() {
-        if (this.hiddenTreasures.isEmpty() && this.visibleTreasures.isEmpty()) {
+        if (this.hiddenTreasures.isEmpty()) {
             return false;
         } else {
             return true;
@@ -266,6 +276,12 @@ public class Player {
         Random rand = new Random();
 
         return this.hiddenTreasures.get(rand.nextInt(this.hiddenTreasures.size()));
+    }
+    
+    protected Treasure giveMeATreasureVisible() {
+        Random rand = new Random();
+
+        return this.visibleTreasures.get(rand.nextInt(this.visibleTreasures.size()));
     }
 
     public void haveStolen() {
@@ -379,7 +395,7 @@ public class Player {
         Treasure treasure = null;
 
         if (this.canISteal()) {
-            if (this.canYouGiveMeATreasure()) {
+            if (enemy.canYouGiveMeATreasure()) {
                 treasure = enemy.giveMeATreasure();
                 this.hiddenTreasures.add(treasure);
                 this.haveStolen();
@@ -456,6 +472,9 @@ public class Player {
 
     private void setPendingBadConsequence(BadConsequence b) {
         this.pendingBadConsequence = b;
+        if(b == null) {
+            pendingBadConsequence = new NumericBadConsequence("", 0, 0, 0);
+        }
     }
 
     public ArrayList<Treasure> getVisibleTreasures() {
@@ -479,5 +498,12 @@ public class Player {
                 this.hiddenTreasures.remove(t);
             }
         }        
+    }
+    
+    public void useJoker() {
+        this.setPendingBadConsequence(null);
+        
+        CardDealer dealer = CardDealer.getInstance();
+        discardVisibleTreasure(dealer.getJokerCard());
     }
 }

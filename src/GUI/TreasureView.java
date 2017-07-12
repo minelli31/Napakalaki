@@ -24,25 +24,26 @@ public class TreasureView extends javax.swing.JPanel {
         treasureName.setText(treasureModel.getName());
         
         TreasureKind type = treasureModel.getType();
+        treasureKind.setText(type.toString());
         
-        switch (type)
-        {
-            case ONEHAND:
-                treasureKind.setText("ONE HAND");
-                break;
-            case BOTHHAND:
-                treasureKind.setText("BOTH HANDS");
-                break;
-            case SHOE:
-                treasureKind.setText("SHOES");
-                break;
-            case HELMET:
-                treasureKind.setText("HELMET");
-                break;
-            case ARMOR:
-                treasureKind.setText("ARMOR");
-                break;
-        }
+//        switch (type)
+//        {
+//            case ONEHAND:
+//                treasureKind.setText("ONE HAND");
+//                break;
+//            case BOTHHAND:
+//                treasureKind.setText("BOTH HANDS");
+//                break;
+//            case SHOE:
+//                treasureKind.setText("SHOES");
+//                break;
+//            case HELMET:
+//                treasureKind.setText("HELMET");
+//                break;
+//            case ARMOR:
+//                treasureKind.setText("ARMOR");
+//                break;
+//        }
         
         level.setText(Integer.toString(treasureModel.getGainedLevels()));
         repaint();

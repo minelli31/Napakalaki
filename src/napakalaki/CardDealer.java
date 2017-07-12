@@ -22,6 +22,8 @@ public class CardDealer {
     private ArrayList<Treasure>     usedTreasures;;
     private ArrayList<Cultist>      unusedCultists;
     private ArrayList<Cultist>      usedCultists;
+    
+    private Treasure jokerCard = new Treasure("El Joker", 0,TreasureKind.JOKER);
 
     private CardDealer() {
         this.unusedMonsters  = new ArrayList<Monster>();
@@ -401,9 +403,15 @@ public class CardDealer {
         unusedTreasures.add(new Treasure("Varita de atizamiento", 3, TreasureKind.ONEHAND));
         unusedTreasures.add(new Treasure("Tentáculo de pega", 2, TreasureKind.HELMET));
         unusedTreasures.add(new Treasure("Zapato deja-amigos", 1, TreasureKind.SHOE));
+        
         shuffleTreasures();
+        unusedTreasures.add(0, jokerCard);
     }
-
+    
+    public Treasure getJokerCard(){
+        return this.jokerCard;
+    }
+    
     public Cultist nextCultist() {
         if (this.unusedCultists.isEmpty()) {
             for (Cultist c : this.usedCultists) {

@@ -26,7 +26,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="playerView" min="-2" pref="949" max="-2" attributes="0"/>
+              <Component id="playerView" min="-2" pref="1046" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
@@ -38,7 +38,7 @@
                           </Group>
                           <Component id="nextTurnButton" alignment="1" min="-2" pref="239" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="2" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Component id="monsterView" alignment="1" max="32767" attributes="0"/>
               </Group>

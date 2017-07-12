@@ -25,14 +25,15 @@ public class PlayerView extends javax.swing.JPanel {
     
     public boolean jokerIsVisible() {
         
-        boolean isJoker;
+        boolean isJoker = true;
         CardDealer dealer = CardDealer.getInstance();
         Treasure joker = dealer.getJokerCard();
         Player player;
         player = napakalakiModel.getCurrentPlayer();
+        System.out.println("PLAYER " + napakalakiModel.getCurrentPlayer() + ":");
         if(player == null) return false;
         isJoker = player.getVisibleTreasures().contains(joker);
-        
+        //isJoker = playerModel.getVisibleTreasures().contains(joker);
         return isJoker;
     }
     
@@ -83,7 +84,7 @@ public class PlayerView extends javax.swing.JPanel {
             }
         }
         
-        useJoker.setVisible(jokerIsVisible());
+        useJoker.setEnabled(jokerIsVisible());
         
         repaint();
         revalidate();
@@ -314,6 +315,11 @@ public class PlayerView extends javax.swing.JPanel {
         );
 
         useJoker.setText("use JOKER");
+        useJoker.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                useJokerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -341,7 +347,7 @@ public class PlayerView extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(isCultist, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(useJoker, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(useJoker, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -351,7 +357,7 @@ public class PlayerView extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(numberOfCultists))
                             .addComponent(jSeparator2))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(176, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -385,7 +391,7 @@ public class PlayerView extends javax.swing.JPanel {
                             .addComponent(totalCultistsText, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(numberOfCultists)))
                     .addComponent(useJoker))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -398,7 +404,9 @@ public class PlayerView extends javax.swing.JPanel {
             makeVisibleButton.setEnabled(false);
         
         if(jokerIsVisible()) {
-            useJoker.setVisible(true);
+             
+            useJoker.setEnabled(true);
+           
         }
     }//GEN-LAST:event_makeVisibleButtonActionPerformed
     
@@ -448,6 +456,14 @@ public class PlayerView extends javax.swing.JPanel {
         discardButton.setEnabled(false);
         makeVisibleButton.setEnabled(false);
     }//GEN-LAST:event_discardAllButtonActionPerformed
+
+    private void useJokerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useJokerActionPerformed
+        playerModel.useJoker();
+        setPlayer(playerModel); //Actualiza la interfaz
+        useJoker.setEnabled(false);
+     
+       
+    }//GEN-LAST:event_useJokerActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
