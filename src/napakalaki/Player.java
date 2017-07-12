@@ -92,7 +92,8 @@ public class Player {
                 HELMET   = 0,
                 SHOE     = 0,
                 NECKLACE = 0,
-                JOKER    = 0;
+                JOKER    = 0,
+                THIEF    = 0;
 
         for (Treasure tr : this.visibleTreasures) {
             if (tr.getType() == TreasureKind.ARMOR) {
@@ -109,6 +110,8 @@ public class Player {
                 NECKLACE++;
             } else if (tr.getType() == TreasureKind.JOKER) {
                 JOKER++;
+            } else if (tr.getType() == TreasureKind.THIEF) {
+                THIEF++;
             }
         }
 
@@ -157,6 +160,13 @@ public class Player {
 
         case JOKER :
             if (JOKER == 0) {
+                canI = true;
+            }
+
+            break;
+
+        case THIEF :
+            if (THIEF == 0) {
                 canI = true;
             }
 
@@ -510,5 +520,13 @@ public class Player {
 
     public ArrayList<Treasure> getVisibleTreasures() {
         return this.visibleTreasures;
+    }
+
+    public void useThief() {
+        //descarta todos los tesoros pero gana 5 niveles
+        CardDealer dealer = CardDealer.getInstance();
+        this.discardAllTreasures();
+        this.incrementLevels(5);
+        discardVisibleTreasure(dealer.getJokerCard());
     }
 }

@@ -24,6 +24,7 @@ public class CardDealer {
     private ArrayList<Cultist>      usedCultists;
     
     private Treasure jokerCard = new Treasure("El Joker", 0,TreasureKind.JOKER);
+    private Treasure treasureThief = new Treasure("Treasure Thief", 0,TreasureKind.THIEF);
 
     private CardDealer() {
         this.unusedMonsters  = new ArrayList<Monster>();
@@ -405,11 +406,16 @@ public class CardDealer {
         unusedTreasures.add(new Treasure("Zapato deja-amigos", 1, TreasureKind.SHOE));
         
         shuffleTreasures();
-        unusedTreasures.add(0, jokerCard);
+        //unusedTreasures.add(0, jokerCard);
+        //unusedTreasures.add(0, treasureThief);
     }
     
     public Treasure getJokerCard(){
         return this.jokerCard;
+    }
+    
+    public Treasure getTreasureThief(){
+        return this.treasureThief;
     }
     
     public Cultist nextCultist() {

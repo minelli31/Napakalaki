@@ -37,6 +37,15 @@ public class PlayerView extends javax.swing.JPanel {
         return isJoker;
     }
     
+    public boolean thiefIsVisible(){
+        CardDealer dealer = CardDealer.getInstance();
+        Player player = napakalakiModel.getCurrentPlayer();
+        Treasure treasureThief = dealer.getTreasureThief();
+        if(player == null) return false;
+        boolean isThief = player.getVisibleTreasures().contains(treasureThief);
+        return isThief;
+    }
+    
     public void setPlayer (Player p)
     {
         playerModel = p;
@@ -85,6 +94,7 @@ public class PlayerView extends javax.swing.JPanel {
         }
         
         useJoker.setEnabled(jokerIsVisible());
+        treasureThief.setEnabled(thiefIsVisible());
         
         repaint();
         revalidate();
@@ -189,6 +199,7 @@ public class PlayerView extends javax.swing.JPanel {
         combatLevel = new javax.swing.JLabel();
         pendingBadConsequence = new GUI.PendingBadConsequenceView();
         useJoker = new javax.swing.JButton();
+        treasureThief = new javax.swing.JButton();
 
         jSeparator2.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -321,6 +332,13 @@ public class PlayerView extends javax.swing.JPanel {
             }
         });
 
+        treasureThief.setText("LADRÓN");
+        treasureThief.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                treasureThiefActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -347,6 +365,8 @@ public class PlayerView extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(isCultist, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(treasureThief, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
                         .addComponent(useJoker, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -357,7 +377,7 @@ public class PlayerView extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(numberOfCultists))
                             .addComponent(jSeparator2))))
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -390,8 +410,9 @@ public class PlayerView extends javax.swing.JPanel {
                             .addComponent(ableToSteal)
                             .addComponent(totalCultistsText, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(numberOfCultists)))
-                    .addComponent(useJoker))
-                .addContainerGap(14, Short.MAX_VALUE))
+                    .addComponent(useJoker)
+                    .addComponent(treasureThief))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -407,6 +428,10 @@ public class PlayerView extends javax.swing.JPanel {
              
             useJoker.setEnabled(true);
            
+        }
+        
+        if(thiefIsVisible()){
+            treasureThief.setEnabled(true);
         }
     }//GEN-LAST:event_makeVisibleButtonActionPerformed
     
@@ -460,10 +485,14 @@ public class PlayerView extends javax.swing.JPanel {
     private void useJokerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useJokerActionPerformed
         playerModel.useJoker();
         setPlayer(playerModel); //Actualiza la interfaz
-        useJoker.setEnabled(false);
-     
-       
+        useJoker.setEnabled(false);       
     }//GEN-LAST:event_useJokerActionPerformed
+
+    private void treasureThiefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_treasureThiefActionPerformed
+        playerModel.useThief();
+        setPlayer(playerModel);
+        treasureThief.setEnabled(false);
+    }//GEN-LAST:event_treasureThiefActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -485,6 +514,7 @@ public class PlayerView extends javax.swing.JPanel {
     private javax.swing.JPanel player_attributes;
     private javax.swing.JButton stealButton;
     private javax.swing.JLabel totalCultistsText;
+    private javax.swing.JButton treasureThief;
     private javax.swing.JButton useJoker;
     private javax.swing.JPanel visibleTreasures;
     // End of variables declaration//GEN-END:variables
